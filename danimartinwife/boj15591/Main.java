@@ -1,4 +1,4 @@
-package boj15591;
+package danimartinwife.boj15591;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
