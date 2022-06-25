@@ -14,7 +14,7 @@ public class Main {
 
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(
-      new FileReader("./src/boj15591/input.txt")
+      new FileReader("./src/danimartinwife/boj15591/input.txt")
     );
     // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
