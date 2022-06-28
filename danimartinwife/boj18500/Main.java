@@ -11,7 +11,8 @@ public class Main {
   static int R, C, N;
   static int[] dr = { 0, 1, 0, -1 };
   static int[] dc = { 1, 0, -1, 0 };
-  static int[][] map;
+  static char[][] map;
+  static int[][] visited;
   static int chang = 1;
 
   static class Node {
@@ -34,15 +35,11 @@ public class Main {
     StringTokenizer st = new StringTokenizer(br.readLine());
     R = Integer.parseInt(st.nextToken());
     C = Integer.parseInt(st.nextToken());
-    map = new int[R][C];
+    map = new char[R][C];
     for (int i = 0; i < R; i++) {
       String input = br.readLine();
       for (int j = 0; j < C; j++) {
-        if (input.charAt(j) == '.') {
-          map[i][j] = 0;
-        } else {
-          map[i][j] = 1;
-        }
+        map[i][j] = input.charAt(j);
       }
     }
     N = Integer.parseInt(br.readLine());
@@ -51,6 +48,9 @@ public class Main {
       int h = R - Integer.parseInt(st.nextToken());
       throwStone(h, chang);
       chang *= -1;
+      int flyNum = flyCheckBFS();
+      if (flyNum == 0) continue;
+      fall(flyNum);
     }
     br.close();
     printMap();
@@ -60,11 +60,7 @@ public class Main {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < R; i++) {
       for (int j = 0; j < C; j++) {
-        if (map[i][j] == 0) {
-          sb.append('.');
-        } else {
-          sb.append('x');
-        }
+        sb.append(map[i][j]);
       }
       if (i != R - 1) sb.append('\n');
     }
@@ -75,70 +71,79 @@ public class Main {
     int c = -1;
     if (chang == 1) {
       for (int cc = C - 1; 0 <= cc; cc--) {
-        if (map[h][cc] == 1) c = cc;
+        if (map[h][cc] == 'x') c = cc;
       }
     } else {
       for (int cc = 0; cc < C; cc++) {
-        if (map[h][cc] == 1) c = cc;
+        if (map[h][cc] == 'x') c = cc;
       }
     }
     if (c == -1) return;
-    map[h][c] = 0;
-    breakAndFall(h, c);
+    map[h][c] = '.';
   }
 
   static boolean inMap(int r, int c) {
     return (0 <= r && r < R && 0 <= c && c < C);
   }
 
-  static void breakAndFall(int r, int c) {
-    int[][] visited = new int[R][C];
+  static int flyCheckBFS() {
+    int num = 1;
     LinkedList<Node> queue = new LinkedList<>();
-    LinkedList<Node> fallq = new LinkedList<>();
-    boolean isRooted;
-    for (int i = 0; i < 4; i++) {
-      isRooted = false;
-      int sr = r + dr[i];
-      int sc = c + dc[i];
-      if (!inMap(sr, sc) || map[sr][sc] == 0 || visited[sr][sc] == 1) continue;
-      fallq.clear();
-      fallq.add(new Node(sr, sc));
-      queue.add(new Node(sr, sc));
-      visited[sr][sc] = 1;
-      while (!queue.isEmpty()) {
-        Node now = queue.poll();
-        for (int j = 0; j < 4; j++) {
-          int nr = now.r + dr[j];
-          int nc = now.c + dc[j];
-          if (inMap(nr, nc) && map[nr][nc] == 1 && visited[nr][nc] == 0) {
-            visited[nr][nc] = 1;
-            queue.add(new Node(nr, nc));
-            fallq.add(new Node(nr, nc));
-            if (nr == R - 1) isRooted = true;
+    visited = new int[R][C];
+    for (int r = 0; r < R; r++) {
+      for (int c = 0; c < C; c++) {
+        if (map[r][c] == '.' || visited[r][c] != 0) continue;
+        boolean isFall = true;
+        queue.add(new Node(r, c));
+        visited[r][c] = num;
+        while (!queue.isEmpty()) {
+          Node now = queue.poll();
+          for (int i = 0; i < 4; i++) {
+            int nr = now.r + dr[i];
+            int nc = now.c + dc[i];
+            if (inMap(nr, nc) && map[nr][nc] == 'x' && visited[nr][nc] == 0) {
+              visited[nr][nc] = num;
+              queue.add(new Node(nr, nc));
+              if (nr == R - 1) isFall = false;
+            }
+          }
+        }
+        if (isFall) return num;
+        num++;
+      }
+    }
+    return 0;
+  }
+
+  static void fall(int num) {
+    int fd = fallDistance(num);
+    for (int r = R - 1; r >= 0; r--) {
+      for (int c = 0; c < C; c++) {
+        if (map[r][c] == 'x' && visited[r][c] == num) {
+          map[r + fd][c] = 'x';
+          map[r][c] = '.';
+        }
+      }
+    }
+  }
+
+  static int fallDistance(int num) {
+    int fd = Integer.MAX_VALUE;
+    for (int c = 0; c < C; c++) {
+      int high = -1, low = R;
+      for (int r = 0; r < R; r++) {
+        if (map[r][c] == 'x') {
+          if (visited[r][c] == num) {
+            high = r;
+          } else {
+            low = r;
+          }
+          if (high < low && high != -1) {
+            fd = Math.min(fd, low - high);
           }
         }
       }
-      if (isRooted) continue;
-      int fallDistance = 0;
-      for (int j = 0; j < fallq.size(); j++) {
-        Node temp = fallq.get(j);
-        map[temp.r][temp.c] = 0;
-      }
-      boolean collision = false;
-      while (collision == false) {
-        fallDistance++;
-        for (int j = 0; j < fallq.size(); j++) {
-          Node temp = fallq.get(j);
-          if (
-            !inMap(temp.r + fallDistance, temp.c) ||
-            map[temp.r + fallDistance][temp.c] == 1
-          ) collision = true;
-        }
-      }
-      for (int j = 0; j < fallq.size(); j++) {
-        Node temp = fallq.get(j);
-        map[temp.r + fallDistance - 1][temp.c] = 1;
-      }
     }
+    return (fd - 1);
   }
 }
