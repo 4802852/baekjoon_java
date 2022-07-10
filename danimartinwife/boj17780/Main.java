@@ -1,5 +1,3 @@
-package danimartinwife.boj17780;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,11 +23,7 @@ public class Main {
   static int[] dc = { 1, 0, -1, 0 };
 
   public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(
-      new FileReader(
-        "/Users/hs/vscode/algorithm/algorithm/src/danimartinwife/boj17780/input.txt"
-      )
-    );
+    BufferedReader br = new BufferedReader(new FileReader("input.txt"));
     // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer st = new StringTokenizer(br.readLine());
     N = Integer.parseInt(st.nextToken());

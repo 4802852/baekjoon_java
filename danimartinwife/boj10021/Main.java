@@ -1,5 +1,3 @@
-package danimartinwife.boj10021;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,9 +26,7 @@ public class Main {
   static ArrayList<Pair>[] adj;
 
   public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(
-      new FileReader("/Users/hs/vscode/algorithm/algorithm/src/danimartinwife/boj10021/input.txt")
-    );
+    BufferedReader br = new BufferedReader(new FileReader("input.txt"));
     // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     String[] input = br.readLine().split(" ");
     N = Integer.parseInt(input[0]);

@@ -1,5 +1,3 @@
-package danimartinwife.boj18500;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,11 +24,7 @@ public class Main {
   }
 
   public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(
-      new FileReader(
-        "/Users/hs/vscode/algorithm/algorithm/src/danimartinwife/boj18500/input.txt"
-      )
-    );
+    BufferedReader br = new BufferedReader(new FileReader("input.txt"));
     // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     StringTokenizer st = new StringTokenizer(br.readLine());
     R = Integer.parseInt(st.nextToken());
@@ -137,7 +131,7 @@ public class Main {
       }
     }
   }
-  
+
   // num 번호에 해당하는 미네랄이 얼마만큼 하강할 수 있는지 거리를 구해주는 함수
   static int fallDistance(int num) {
     int fd = Integer.MAX_VALUE;

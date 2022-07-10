@@ -1,5 +1,3 @@
-package danimartinwife.boj16639;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,11 +11,7 @@ public class Main {
   static int[][] dp_min, dp_max;
 
   public static void main(String[] args) throws IOException {
-    BufferedReader br = new BufferedReader(
-      new FileReader(
-        "/Users/hs/vscode/algorithm/algorithm/src/danimartinwife/boj16639/input.txt"
-      )
-    );
+    BufferedReader br = new BufferedReader(new FileReader("input.txt"));
     // BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     N = Integer.parseInt(br.readLine());
     input = br.readLine().toCharArray();
