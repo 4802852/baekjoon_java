@@ -33,7 +33,19 @@ public class Main {
     }
     br.close();
 
-    // BFS
+    // bfs();
+    dfs(1);
+
+    // Virus Count
+    int res = 0;
+    for (int i = 1; i < N + 1; i++) {
+      if (visited[i]) res++;
+    }
+    System.out.println(res - 1);
+  }
+
+  // BFS
+  static void bfs() {
     LinkedList<Integer> queue = new LinkedList<>();
     queue.add(1);
     visited[1] = true;
@@ -46,12 +58,15 @@ public class Main {
         }
       }
     }
+  }
 
-    // Virus Count
-    int res = 0;
-    for (int i = 1; i < N + 1; i++) {
-      if (visited[i]) res++;
+  // DFS
+  static void dfs(int now) {
+    for (int next : graph[now]) {
+      if (visited[next] == false) {
+        visited[next] = true;
+        dfs(next);
+      }
     }
-    System.out.println(res - 1);
   }
 }
